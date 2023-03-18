@@ -1,0 +1,39 @@
+[server]
+debug = false
+host = "127.0.0.1"
+port = 8080
+
+[mysql]
+host = "127.0.0.1"
+port = 3306
+username = "root"
+password = ""
+db = "generalsaas"
+timeout = 3
+
+[redis]
+host = "127.0.0.1"
+port = 6379
+# model choice = [1,2,3]
+# 1 : 单机
+# 2 : 哨兵
+# 3 : 集群
+model = 1
+mastername = ""
+
+[log]
+filename = "error.log"
+maxsize  = 1024
+maxbackups = 10
+maxage = 21
+# level choice = [-1,0,1,2,3,4,5]
+# -1 : debug
+# 0 : info
+# 1 : warning
+# 2 : error
+# 3 : dpanic
+# 4 : panic
+# 5 : fatal
+level  = -1
+
+
