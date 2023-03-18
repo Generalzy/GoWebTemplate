@@ -20,8 +20,6 @@ func GetUserInfoList(ctx *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(Form)
-	fmt.Println(fmt.Sprintf("%s %s", Form.SortField, Form.SortOrder))
 
 	err := global.GlobalMysqlClient.Table("web_userinfo").Order(
 		fmt.Sprintf("%s %s", Form.SortField, Form.SortOrder)).Limit(Form.PageSize).Offset(Form.PageSize * (Form.PageIndex - 1)).Find(&userInfos).Error

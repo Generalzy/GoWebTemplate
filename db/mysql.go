@@ -5,7 +5,6 @@ import (
 	"github.com/Generalzy/GeneralSaaS/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -31,8 +30,6 @@ func InitMysql(c *conf.MysqlConf) (*gorm.DB, error) {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-		// 日志
-		Logger: logger.Default.LogMode(logger.Info),
 	})
 
 	return db, err
