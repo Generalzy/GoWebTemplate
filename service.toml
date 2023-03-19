@@ -2,6 +2,8 @@
 debug = false
 host = "127.0.0.1"
 port = 8080
+# language choice = ["ar","en","es","fa","fr","id","it","ja","nl","pt","pt_BR","ru","tr","vi","zh","zh_tw"
+language = "zh"
 
 [mysql]
 host = "127.0.0.1"

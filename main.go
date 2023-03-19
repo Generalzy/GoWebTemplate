@@ -8,6 +8,7 @@ import (
 	"github.com/Generalzy/GeneralSaaS/global"
 	"github.com/Generalzy/GeneralSaaS/log"
 	"github.com/Generalzy/GeneralSaaS/middleware"
+	"github.com/Generalzy/GeneralSaaS/validators"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -43,6 +44,15 @@ func init() {
 	global.GlobalLogger.Info("初始化redis")
 
 	svcConfig = config.ServerConf
+
+	// validators
+	global.GlobalTranslator, err = validators.InitTrans(svcConfig.Language)
+	if err != nil {
+		global.GlobalLogger.Error(err.Error())
+		os.Exit(1)
+	} else {
+		global.GlobalLogger.Info("初始化翻译器")
+	}
 }
 
 func RunServer() {
@@ -56,11 +66,9 @@ func RunServer() {
 	}
 
 	engine = gin.New()
-
 	// middleware
 	engine.Use(middleware.GinLogger(), middleware.GinRecovery(true))
-	gin.Logger()
-
+	// urls
 	urls.InitUrls(engine)
 
 	err := engine.Run(fmt.Sprintf("%s:%d", svcConfig.Host, svcConfig.Port))
