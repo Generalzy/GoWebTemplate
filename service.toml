@@ -14,7 +14,7 @@ db = "generalsaas"
 timeout = 3
 
 [redis]
-host = "127.0.0.1"
+host = ["127.0.0.1"]
 port = 6379
 # model choice = [1,2,3]
 # 1 : 单机

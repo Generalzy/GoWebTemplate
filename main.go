@@ -71,7 +71,9 @@ func RunServer() {
 	// urls
 	urls.InitUrls(engine)
 
-	err := engine.Run(fmt.Sprintf("%s:%d", svcConfig.Host, svcConfig.Port))
+	runEnv := fmt.Sprintf("%s:%d", svcConfig.Host, svcConfig.Port)
+	global.GlobalLogger.Info(runEnv + " 服务运行中....")
+	err := engine.Run(runEnv)
 	if err != nil {
 		global.GlobalLogger.Error(err.Error())
 		os.Exit(0)
