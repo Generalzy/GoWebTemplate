@@ -20,9 +20,10 @@ type ServiceConf struct {
 }
 
 type ServerConf struct {
-	Debug bool
-	Host  string
-	Port  int
+	Debug    bool
+	Host     string
+	Language string
+	Port     int
 }
 
 type MysqlConf struct {
@@ -66,9 +67,10 @@ func InitConf() (*ServiceConf, error) {
 			MasterName: viper.GetString("redis.mastername"),
 		},
 		ServerConf: &ServerConf{
-			Debug: viper.GetBool("server.debug"),
-			Host:  viper.GetString("server.host"),
-			Port:  viper.GetInt("server.port"),
+			Debug:    viper.GetBool("server.debug"),
+			Host:     viper.GetString("server.host"),
+			Port:     viper.GetInt("server.port"),
+			Language: viper.GetString("server.language"),
 		},
 		MysqlConf: &MysqlConf{
 			Host:     viper.GetString("mysql.host"),

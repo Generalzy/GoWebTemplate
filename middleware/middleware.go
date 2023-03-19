@@ -28,8 +28,11 @@ func GinLogger() gin.HandlerFunc {
 			zap.String("path", path),
 			zap.String("query", query),
 			zap.String("ip", c.ClientIP()),
-			zap.String("user-agent", c.Request.UserAgent()),
+			// UA
+			// zap.String("user-agent", c.Request.UserAgent()),
+			// ctx中的报错信息
 			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+			// 请求响应时间
 			zap.Duration("cost", cost),
 		)
 	}
