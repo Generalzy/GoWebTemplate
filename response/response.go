@@ -1,8 +1,9 @@
-package utils
+package response
 
 import (
 	"fmt"
 	"github.com/Generalzy/GeneralSaaS/global"
+	"github.com/Generalzy/GeneralSaaS/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -53,7 +54,7 @@ func (response *HttpResponse) ReturnJson(ctx *gin.Context) {
 	if response.error != nil {
 		// 判断错误是否是校验器引起的
 		if errs, ok := response.error.(validator.ValidationErrors); ok {
-			response.error = TrimMapStructNamePrefix(errs.Translate(global.GlobalTranslator))
+			response.error = utils.TrimMapStructNamePrefix(errs.Translate(global.GlobalTranslator))
 		} else {
 			// 如果error允许string则将error转化为string
 			if errs, ok := response.error.(error); ok {
