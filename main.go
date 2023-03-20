@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/Generalzy/GeneralSaaS/GeneralSaaS/urls"
 	"github.com/Generalzy/GeneralSaaS/conf"
 	"github.com/Generalzy/GeneralSaaS/db"
 	"github.com/Generalzy/GeneralSaaS/global"
 	"github.com/Generalzy/GeneralSaaS/log"
 	"github.com/Generalzy/GeneralSaaS/middleware"
 	"github.com/Generalzy/GeneralSaaS/validators"
+	"github.com/Generalzy/GeneralSaaS/web/urls"
 	"github.com/gin-gonic/gin"
 	"os"
 )
@@ -69,10 +69,10 @@ func RunServer() {
 
 	engine = gin.New()
 	// middleware
-	engine.Use(middleware.GinLogger(), middleware.GinRecovery(true))
+	middleware.InitMiddleWare(engine)
 	// urls
 	urls.InitUrls(engine)
-
+	// run
 	runEnv := fmt.Sprintf("%s:%d", svcConfig.Host, svcConfig.Port)
 	global.GlobalLogger.Info(runEnv + " 服务运行中....")
 	err := engine.Run(runEnv)

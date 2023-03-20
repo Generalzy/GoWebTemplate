@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/Generalzy/GeneralSaaS/global"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net"
@@ -12,6 +13,10 @@ import (
 	"strings"
 	"time"
 )
+
+func InitMiddleWare(engine *gin.Engine) {
+	engine.Use(GinLogger(), GinRecovery(true), cors.Default())
+}
 
 // GinLogger 接收gin框架默认的日志
 func GinLogger() gin.HandlerFunc {

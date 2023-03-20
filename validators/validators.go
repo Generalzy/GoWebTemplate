@@ -3,7 +3,6 @@ package validators
 import (
 	"errors"
 	"fmt"
-	"github.com/Generalzy/GeneralSaaS/utils"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -13,6 +12,11 @@ import (
 	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
 	"reflect"
 	"strings"
+	"time"
+)
+
+const (
+	DateValidatorKetWord = "checkDate"
 )
 
 // InitTrans 初始化翻译器
@@ -57,15 +61,15 @@ func InitTrans(locale string) (ut.Translator, error) {
 		}
 
 		// 在校验器注册自定义的校验方法
-		if err = v.RegisterValidation(utils.DateValidatorKetWord, utils.DateValidator); err != nil {
+		if err = v.RegisterValidation(DateValidatorKetWord, DateValidator); err != nil {
 			return nil, err
 		}
 		// 注册自定义的校验字段
 		if err = v.RegisterTranslation(
-			utils.DateValidatorKetWord,
+			DateValidatorKetWord,
 			trans,
-			utils.RegisterTranslator(utils.DateValidatorKetWord, "{0}必须要晚于当前日期"),
-			utils.Translate,
+			RegisterTranslator(DateValidatorKetWord, "{0}必须要晚于当前日期"),
+			Translate,
 		); err != nil {
 			return nil, err
 		}
@@ -73,4 +77,35 @@ func InitTrans(locale string) (ut.Translator, error) {
 		return trans, err
 	}
 	return nil, errors.New("failed to initialize translator")
+}
+
+// DateValidator 日期校验器,校验传入time.Date是否晚于当前时间
+func DateValidator(fl validator.FieldLevel) bool {
+	date, err := time.Parse("2006-01-02", fl.Field().String())
+	if err != nil {
+		return false
+	}
+	if date.Before(time.Now()) {
+		return false
+	}
+	return true
+}
+
+// RegisterTranslator 为自定义字段添加翻译功能
+func RegisterTranslator(tag string, msg string) validator.RegisterTranslationsFunc {
+	return func(trans ut.Translator) error {
+		if err := trans.Add(tag, msg, false); err != nil {
+			return err
+		}
+		return nil
+	}
+}
+
+// Translate 自定义字段的翻译方法
+func Translate(trans ut.Translator, fe validator.FieldError) string {
+	msg, err := trans.T(fe.Tag(), fe.Field())
+	if err != nil {
+		panic(fe.(error).Error())
+	}
+	return msg
 }
