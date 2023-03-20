@@ -34,6 +34,8 @@ func init() {
 
 	global.GlobalMysqlClient, err = db.InitMysql(config.MysqlConf)
 	if err != nil {
+		// 如果error不为nil则程序整体退出
+		// InitMysql中泄露的协程也会被清除
 		global.GlobalLogger.Error(err.Error())
 		os.Exit(1)
 	} else {
