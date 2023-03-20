@@ -7,6 +7,7 @@ import (
 	"github.com/Generalzy/GeneralSaaS/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"time"
 )
@@ -48,6 +49,8 @@ func InitMysql(c *conf.MysqlConf) (*gorm.DB, error) {
 			NamingStrategy: schema.NamingStrategy{
 				SingularTable: true,
 			},
+			// 禁止打印日志
+			Logger: logger.Default.LogMode(logger.Silent),
 		})
 
 		flagCh <- struct{}{}
@@ -56,10 +59,10 @@ func InitMysql(c *conf.MysqlConf) (*gorm.DB, error) {
 	for {
 		select {
 		case <-flagCh:
-			if db != nil {
-				return db, nil
+			if err != nil {
+				return nil, err
 			}
-			return nil, err
+			return db, nil
 		case <-ctx.Done():
 			return nil, errors.New("init gorm timeout")
 		}
