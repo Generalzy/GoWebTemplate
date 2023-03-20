@@ -24,7 +24,7 @@ func NewHttpResponse() *HttpResponse {
 	return &HttpResponse{
 		code:       Code0,
 		data:       nil,
-		error:      "",
+		error:      nil,
 		httpStatus: http.StatusOK,
 	}
 }
