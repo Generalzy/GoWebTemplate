@@ -13,10 +13,11 @@ const (
 )
 
 type ServiceConf struct {
-	RedisConf  *RedisConf
-	ServerConf *ServerConf
-	MysqlConf  *MysqlConf
-	LogConf    *LogConf
+	RedisConf   *RedisConf
+	ServerConf  *ServerConf
+	MysqlConf   *MysqlConf
+	LogConf     *LogConf
+	MongoDBConf *MongoDBConf
 }
 
 type ServerConf struct {
@@ -48,6 +49,10 @@ type LogConf struct {
 	MaxSize    int
 	MaxBackups int
 	MaxAge     int
+}
+
+type MongoDBConf struct {
+	Uri string
 }
 
 func InitConf() (*ServiceConf, error) {
@@ -86,6 +91,9 @@ func InitConf() (*ServiceConf, error) {
 			MaxSize:    viper.GetInt("log.maxsize"),
 			MaxBackups: viper.GetInt("log.maxbackups"),
 			MaxAge:     viper.GetInt("log.maxage"),
+		},
+		MongoDBConf: &MongoDBConf{
+			Uri: viper.GetString("mongodb.uri"),
 		},
 	}, nil
 }

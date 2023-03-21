@@ -1,7 +1,11 @@
 package middleware
 
 import (
+	"errors"
+	"fmt"
 	"github.com/Generalzy/GeneralSaaS/global"
+	"github.com/Generalzy/GeneralSaaS/response"
+	"github.com/Generalzy/GeneralSaaS/utils/token"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -14,8 +18,11 @@ import (
 	"time"
 )
 
+// 跳过jwt的url
+var allowedUrl = map[string]struct{}{}
+
 func InitMiddleWare(engine *gin.Engine) {
-	engine.Use(GinLogger(), GinRecovery(true), cors.Default())
+	engine.Use(GinLogger(), GinRecovery(true), cors.Default(), JsonWebTokenMiddleWare())
 }
 
 // GinLogger 接收gin框架默认的日志
@@ -87,5 +94,43 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 			}
 		}()
 		c.Next()
+	}
+}
+
+func JsonWebTokenMiddleWare() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if _, ok := allowedUrl[ctx.Request.URL.Path]; ok {
+			ctx.Next()
+			return
+		}
+
+		r := response.NewHttpResponse()
+		t := ctx.GetHeader("Authorization")
+
+		if t == "" {
+			r.SetCode(response.Code1).SetHttpStatus(http.StatusBadRequest).SetError(
+				errors.New("auth为空")).ReturnJson(ctx)
+			ctx.Abort()
+			return
+		}
+
+		parts := strings.SplitN(t, " ", 2)
+		if len(parts) != 2 && parts[0] != "Jwt" {
+			r.SetCode(response.Code1).SetHttpStatus(http.StatusBadRequest).SetError(
+				errors.New("auth错误")).ReturnJson(ctx)
+			ctx.Abort()
+			return
+		}
+
+		claim, err := token.ParseToken(parts[1])
+		if err != nil {
+			r.SetCode(response.Code1).SetHttpStatus(http.StatusBadRequest).SetError(
+				errors.New("token错误")).ReturnJson(ctx)
+			ctx.Abort()
+			return
+		}
+
+		fmt.Println(claim.UID)
+		ctx.Next()
 	}
 }

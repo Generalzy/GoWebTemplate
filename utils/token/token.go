@@ -13,13 +13,13 @@ var (
 )
 
 type JsonWebTokenClaim struct {
-	Username string `json:"username"`
+	UID string `json:"uid"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(username string) (string, error) {
+func GenerateToken(uid string) (string, error) {
 	claims := JsonWebTokenClaim{
-		username, // 自定义字段
+		uid, // 自定义字段
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(ExpireAt)),
 			Issuer:    Issuer, // 签发人
@@ -27,7 +27,7 @@ func GenerateToken(username string) (string, error) {
 	}
 	// 使用指定的签名方法创建签名对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(SecretKey))
+	return token.SignedString(SecretKey)
 }
 
 func ParseToken(token string) (*JsonWebTokenClaim, error) {

@@ -38,4 +38,6 @@ maxage = 21
 # 5 : fatal
 level  = -1
 
-
+[mongodb]
+# 允许填写集群uri
+uri = "mongodb://localhost:27017"

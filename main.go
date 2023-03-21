@@ -45,8 +45,15 @@ func init() {
 	global.GlobalRedisClient = db.InitRedis(config.RedisConf)
 	global.GlobalLogger.Info("初始化redis")
 
-	svcConfig = config.ServerConf
+	global.GlobalMongoDBClient, err = db.InitMongoDB(config.MongoDBConf)
+	if err != nil {
+		global.GlobalLogger.Error(err.Error())
+		os.Exit(1)
+	} else {
+		global.GlobalLogger.Info("初始化mongodb")
+	}
 
+	svcConfig = config.ServerConf
 	// validators
 	global.GlobalTranslator, err = validators.InitTrans(svcConfig.Language)
 	if err != nil {
